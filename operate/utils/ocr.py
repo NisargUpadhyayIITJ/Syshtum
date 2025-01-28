@@ -2,6 +2,7 @@ from config import Config
 from PIL import Image, ImageDraw
 import os
 from datetime import datetime
+from loguru import logger
 
 # Load configuration
 config = Config()
@@ -21,19 +22,20 @@ def get_text_element(result, search_text, image_path):
     Raises:
         Exception: If the text element is not found in the results.
     """
-    if config.verbose:
-        print("[get_text_element]")
-        print("[get_text_element] search_text", search_text)
-        # Create /ocr directory if it doesn't exist
-        ocr_dir = "ocr"
-        if not os.path.exists(ocr_dir):
-            os.makedirs(ocr_dir)
+    #if config.verbose:
+    print("[get_text_element]")
+    print("[get_text_element] search_text", search_text)
+    # Create /ocr directory if it doesn't exist
+    ocr_dir = "ocr"
+    if not os.path.exists(ocr_dir):
+        os.makedirs(ocr_dir)
 
-        # Open the original image
-        image = Image.open(image_path)
-        draw = ImageDraw.Draw(image)
+    # Open the original image
+    image = Image.open(image_path)
+    draw = ImageDraw.Draw(image)
 
     found_index = None
+    logger.success(f"Search text: {search_text}")
     for index, element in enumerate(result):
         text = element[1]
         box = element[0]
@@ -48,16 +50,17 @@ def get_text_element(result, search_text, image_path):
                 print("[get_text_element][loop] found search_text, index:", index)
 
     if found_index is not None:
-        if config.verbose:
-            # Draw bounding box of the found text in red
-            box = result[found_index][0]
-            draw.polygon([tuple(point) for point in box], outline="red")
-            # Save the image with bounding boxes
-            datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-            ocr_image_path = os.path.join(ocr_dir, f"ocr_image_{datetime_str}.png")
-            image.save(ocr_image_path)
-            print("[get_text_element] OCR image saved at:", ocr_image_path)
-
+        #if config.verbose:
+        # Draw bounding box of the found text in red
+        box = result[found_index][0]
+        draw.polygon([tuple(point) for point in box], outline="red")
+        # Save the image with bounding boxes
+        datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        ocr_image_path = os.path.join(ocr_dir, f"ocr_image_{datetime_str}.png")
+        image.save(ocr_image_path)
+        print("[get_text_element] OCR image saved at:", ocr_image_path)
+        logger.debug("OCR image saved.")
+        
         return found_index
 
     raise Exception("The text element was not found in the image")
