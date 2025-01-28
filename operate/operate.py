@@ -6,6 +6,7 @@ from prompt_toolkit.shortcuts import message_dialog
 from prompt_toolkit import prompt
 from exceptions import ModelNotRecognizedException
 import platform
+from loguru import logger
 
 # from operate.models.prompts import USER_QUESTION, get_system_prompt
 from models.prompts import (
@@ -132,6 +133,8 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
 
 
 def operate(operations, model):
+    begin = time.time()
+    logger.success("Into the operate function.")
     if config.verbose:
         print("[Self Operating Computer][operate]")
     for operation in operations:
@@ -183,5 +186,7 @@ def operate(operations, model):
         )
         print(f"{operate_thought}")
         print(f"{ANSI_BLUE}Action: {ANSI_RESET}{operate_type} {operate_detail}\n")
-
+        
+        end = time.time()
+        logger.success("Operate function executed. Performs the OS control.")
     return False
