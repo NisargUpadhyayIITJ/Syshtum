@@ -6,9 +6,11 @@ from PIL import Image, ImageDraw, ImageGrab
 import Xlib.display
 import Xlib.X
 import Xlib.Xutil  # not sure if Xutil is necessary
+from loguru import logger
 
 
 def capture_screen_with_cursor(file_path):
+    logger.debug("Screenshot captured.")
     user_platform = platform.system()
 
     if user_platform == "Windows":
