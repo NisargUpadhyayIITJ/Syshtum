@@ -5,6 +5,8 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 from ollama import Client
 from openai import OpenAI
+from huggingface_hub import InferenceClient
+from loguru import logger
 from prompt_toolkit.shortcuts import input_dialog
 
 
@@ -39,6 +41,9 @@ class Config:
         self.ollama_host = (
             None  # instance variables are backups in case savint to a `.env` fails
         )
+        self.hf_api_key = (
+            None  # instance variables are backups in case savint to a `.env` fails
+        )
 
     def initialize_openai(self):
         if self.verbose:
@@ -48,22 +53,26 @@ class Config:
             if self.verbose:
                 print("[Config][initialize_openai] using cached openai_api_key")
             api_key = self.openai_api_key
+            logger.debug(f"OPENAI_API_KEY from cache : {api_key}")
         else:
             if self.verbose:
                 print(
                     "[Config][initialize_openai] no cached openai_api_key, try to get from env."
                 )
             api_key = os.getenv("OPENAI_API_KEY")
+            logger.debug(f"OPENAI_API_KEY is : {api_key}")
 
         client = OpenAI(
             api_key=api_key,
         )
         client.api_key = api_key
         client.base_url = os.getenv("OPENAI_API_BASE_URL", client.base_url)
+        logger.debug(f"OPENAI_BASE_URL is : {client.base_url}")
         return client
 
     def initialize_google(self):
         if self.google_api_key:
+            logger.success(f"Gemini_API from cache : {self.google_api_key}")
             if self.verbose:
                 print("[Config][initialize_google] using cached google_api_key")
             api_key = self.google_api_key
@@ -71,10 +80,11 @@ class Config:
             if self.verbose:
                 print(
                     "[Config][initialize_google] no cached google_api_key, try to get from env."
-                )
+                ) 
             api_key = os.getenv("GOOGLE_API_KEY")
+            logger.success(f"Gemini_API from zshrc : {api_key}") 
         genai.configure(api_key=api_key, transport="rest")
-        model = genai.GenerativeModel("gemini-pro-vision")
+        model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
         return model
 
@@ -88,7 +98,23 @@ class Config:
                     "[Config][initialize_ollama] no cached ollama host. Assuming ollama running locally."
                 )
             self.ollama_host = os.getenv("OLLAMA_HOST", None)
-        model = Client(host=self.ollama_host)
+        model = OpenAI(
+                base_url = 'http://localhost:11434/v1',
+            )
+        return model
+    
+    def initialize_huggingface(self):
+        if self.hf_api_key:
+            if self.verbose:
+                print("[Config][initialize_huggingface] using cached hf_api_key")
+            api_key = self.hf_api_key
+        else:
+            if self.verbose:
+                print(
+                    "[Config][initialize_huggingface] no cached hf_api_key, try to get from env."
+                )
+            api_key = os.getenv("HF_API_KEY")
+        model = OpenAI(base_url="https://api-inference.huggingface.co/v1/", api_key=api_key)
         return model
 
     def validation(self, model, voice_mode):
