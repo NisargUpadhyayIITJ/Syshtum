@@ -57,7 +57,5 @@ class OperatingSystem:
             pyautogui.moveTo(x_pixel, y_pixel, duration=duration)
 
             pyautogui.click(x_pixel, y_pixel)
-            time.sleep(0.1)
-            pyautogui.click(x_pixel, y_pixel)
         except Exception as e:
             print("[OperatingSystem][click_at_percentage] error:", e)
