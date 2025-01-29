@@ -165,6 +165,8 @@ def call_gemini_pro_vision(messages, objective):
         screenshot_filename = os.path.join(screenshots_dir, "screenshot.png")
         # Call the function to capture the screen with the cursor
         capture_screen_with_cursor(screenshot_filename)
+        #image = Image.open(screenshot_filename)
+        #messages.append(Image.open(screenshot_filename))
         # sleep for a second
         time.sleep(1)
         prompt = get_system_prompt("gemini-pro-vision", objective)
@@ -175,7 +177,8 @@ def call_gemini_pro_vision(messages, objective):
         if config.verbose:
             print("[call_gemini_pro_vision] model", model)
 
-        response = model.generate_content([prompt, Image.open(screenshot_filename)])
+        messages = [prompt, Image.open(screenshot_filename)]
+        response = model.generate_content(messages)
         print(f"Response from gemini", response.text)
         logger.success("Response received")
 
@@ -190,6 +193,9 @@ def call_gemini_pro_vision(messages, objective):
         content = clean_json(content)
         print(content)
         logger.success("Cleaning done.")
+
+        assistant_message = f'''"role": "assistant", "content": {content}'''
+        prompt += assistant_message
 
         content = json.loads(content)
         logger.success("Jsonified.")
