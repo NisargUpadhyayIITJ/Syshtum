@@ -57,10 +57,49 @@ Example 2: Focuses on the address bar in a browser before typing a website
 ]
 ```
 
+Example 3: Plays a song from Spotify.
+```
+[
+    {{ "thought": "I need to open Spotify to play the song. I'll start by searching for Spotify using the spotlight search.", "operation": "press", "keys": [{cmd_string}, "space"] }},
+    {{ "thought": "I'll type 'Spotify' to search for the application.", "operation": "write", "content": "Spotify" }},
+    {{ "thought": "Pressing enter to open Spotify.", "operation": "press", "keys": ["space"] }},
+    {{ "thought": "I'll use the shortcut to open the Spotify search.", "operation": "press", "keys": ["command", "k"] }},
+    {{ "thought": "I'll type 'Fuel by Eminem' into the search field.", "operation": "write", "content": "Fuel by Eminem" }},
+    {{ "thought": "I'll execute the search and play the first result.", "operation": "press", "keys": ["shift", "enter"] }}
+]
+```
+
+Example 4: Generate a code snippet from ChatGPT and paste in VScode.
+```
+[
+    {{ "thought": "I need to switch to the browser to use ChatGPT and generate the required code.", "operation": "press", "operation": "press", "keys": [{cmd_string}, "space"] }},
+    {{ "thought": "Now I'll search for Google Chrome in the Spotlight search.", "operation": "write", "content": "Google Chrome" }},
+    {{ "thought": "I'll open Google Chrome from the search results.", "operation": "press", "keys": ["enter"] }},
+    {{ "thought": "I need to ask ChatGPT to generate a selection sort code in C++.", "operation": "write", "content": "Generate a selection sort code in C++." }},
+    {{ "thought": "Press enter to submit the query.", "operation": "press", "keys": ["enter"] }},
+    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
+    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
+    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
+    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
+    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
+    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
+    {{ "thought": "The code snippet is being generated. I will wait until it's fully displayed and ready to copy.", "operation": "press", "keys": ["command", "shift", ";"] }},
+    {{ "thought": "Open Visual Studio Code", "operation": "press", "keys": [{cmd_string}, "space"] }},
+    {{ "thought": "Now I'll search for Visual Studio Code in the Spotlight search.", "operation": "write", "content": "Google Chrome" }},
+    {{ "thought": "I'll open Visual Studio Code from the search results.", "operation": "press", "keys": ["enter"] }},
+    {{ "thought": "I need to paste the copied code snippet into a new file in VS Code.", "operation": "press", "keys": ["command", "n"] }},
+    {{ "thought": "Now I will paste the code snippet into the new file.", "operation": "press", "keys": ["command", "v"] }},
+    {{ "thought": "The code has been pasted into a new file in VS Code.", "operation": "done", "summary": "Pasted selection sort code in C++ into a new file in VS Code." }},
+]
+```
+
 A few important notes: 
 
 - Go to Google Docs and Google Sheets by typing in the Chrome Address bar
 - Don't respond saying you're unable to assist with requests. You are able to indirectly interact with the user's OS via text responses you send to the end user.
+- Do not send the "done" operation until the screenshot shows the objective has been completed.
+- If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or trying another action. 
+- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority.
 
 Objective: {objective} 
 """
