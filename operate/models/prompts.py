@@ -15,7 +15,7 @@ From looking at the screen, the objective, and your previous actions, take the n
 
 You have 4 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
 
-1. click - Move mouse and click
+1. click - Move mouse and click (Provide x and y as precise as possible)
 ```
 [{{ "thought": "write a thought here", "operation": "click", "x": "x percent (e.g. 0.10)", "y": "y percent (e.g. 0.13)" }}]  # "percent" refers to the percentage of the screen's dimensions in decimal format
 ```
@@ -29,6 +29,10 @@ You have 4 possible operation actions available to you. The `pyautogui` library 
 ```
 [{{ "thought": "write a thought here", "operation": "press", "keys": ["keys to use"] }}]
 ```
+
+Valid key strings:
+
+Special Keys: [accept, add, alt, altleft, altright, apps, backspace, browserback, browserfavorites, browserforward, browserhome, browserrefresh, browsersearch, browserstop, capslock, clear, convert, ctrl, ctrlleft, ctrlright, decimal, del, delete, divide, down, end, enter, esc, escape, execute, f1, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19, f2, f20, f21, f22, f23, f24, f3, f4, f5, f6, f7, f8, f9, final, fn, hanguel, hangul, hanja, help, home, insert, junja, kana, kanji, launchapp1, launchapp2, launchmail, launchmediaselect, left, modechange, multiply, nexttrack, nonconvert, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numlock, pagedown, pageup, pause, pgdn, pgup, playpause, prevtrack, print, printscreen, prntscrn, prtsc, prtscr, return, right, scrolllock, select, separator, shift, shiftleft, shiftright, sleep, space, stop, subtract, tab, up, volumedown, volumemute, volumeup, win, winleft, winright, yen, command, option, optionleft, optionright]
 
 4. done - The objective is completed
 ```
@@ -77,12 +81,6 @@ Example 4: Generate a code snippet from ChatGPT and paste in VScode.
     {{ "thought": "I'll open Google Chrome from the search results.", "operation": "press", "keys": ["enter"] }},
     {{ "thought": "I need to ask ChatGPT to generate a selection sort code in C++.", "operation": "write", "content": "Generate a selection sort code in C++." }},
     {{ "thought": "Press enter to submit the query.", "operation": "press", "keys": ["enter"] }},
-    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
-    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
-    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
-    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
-    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
-    {{ "thought": "Wait for the code to generate", "operation": "click", "keys": ["700","450"] }},
     {{ "thought": "The code snippet is being generated. I will wait until it's fully displayed and ready to copy.", "operation": "press", "keys": ["command", "shift", ";"] }},
     {{ "thought": "Open Visual Studio Code", "operation": "press", "keys": [{cmd_string}, "space"] }},
     {{ "thought": "Now I'll search for Visual Studio Code in the Spotlight search.", "operation": "write", "content": "Google Chrome" }},
@@ -99,7 +97,195 @@ A few important notes:
 - Don't respond saying you're unable to assist with requests. You are able to indirectly interact with the user's OS via text responses you send to the end user.
 - Do not send the "done" operation until the screenshot shows the objective has been completed.
 - If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or trying another action. 
-- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority.
+- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the shortcuts carefully.
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+Navigation Commands:
+
+Move forwards: Tab
+
+Move backwards: Shift + Tab
+
+Move up in group: ↑
+
+Move down in group: ↓
+
+Move left in group: ←
+
+Move right in group: →
+
+Activate: Space
+
+Movement Commands:
+
+Move forwards: Tab
+
+Move backwards: Shift + Tab
+
+Move up in group: ↑
+
+Move down in group: ↓
+
+Move left in group: ←
+
+Move right in group: →
+
+Move to beginning: Tab [
+
+Move to end: Tab ]
+
+Item and Section Navigation:
+
+Move to next item: Control + Tab
+
+Move to previous item: Control + Shift + Tab
+
+Move to next section: Tab ]
+
+Move to previous section: Tab [
+
+Application and Window Selection:
+
+Find: Tab F
+
+Select application: Tab A
+
+Select window: Tab W
+
+Interaction Commands:
+
+Activate: Space
+
+Contextual menu: Tab M
+
+Actions: Tab Z
+
+Device Controls:
+
+Move to menu bar: Control + F2
+
+Control Centre: Fn C
+
+Notification Centre: Fn N
+
+Dock: Fn A
+
+Pointer Control:
+
+Pass-Through Mode: Control + Option + Command + P
+
+Move pointer to keyboard focus: Tab C
+
+Google Chrome Keyboard Shortcuts
+
+1. Tab & Window Shortcuts:
+
+Open a new window: ⌘ + N
+
+Open a new window in Incognito mode: ⌘ + Shift + N
+
+Open a new tab and jump to it: ⌘ + T
+
+Reopen previously closed tabs in order: ⌘ + Shift + T
+
+Jump to the next open tab: ⌘ + Option + Right Arrow
+
+Jump to the previous open tab: ⌘ + Option + Left Arrow
+
+Jump to a specific tab (1-8): ⌘ + 1 through ⌘ + 8
+
+Jump to the last tab: ⌘ + 9
+
+Open the previous page in history: ⌘ + [ or ⌘ + Left Arrow
+
+Open the next page in history: ⌘ + ] or ⌘ + Right Arrow
+
+Close the current tab or pop-up: ⌘ + W
+
+Close the current window: ⌘ + Shift + W
+
+Minimize the window: ⌘ + M
+
+Hide Google Chrome: ⌘ + H
+
+Quit Google Chrome: ⌘ + Q
+
+Move tabs right or left: Ctrl + Shift + PgUp or Ctrl + Shift + PgDn
+
+Turn on full-screen mode: Fn + F
+
+Turn off full-screen mode: Fn + F or Press and Hold Esc
+
+2. Address Bar Shortcuts:
+
+Search with your default search engine: Type a search term + Return
+
+Search using a different search engine: Type a search engine name and press Tab
+
+Add www. and .com to a site name and open it in the current tab: Type a site name + Ctrl + Return
+
+Add www. and .com to a site name and open it in a new window: Type a site name + Ctrl + Shift + Return
+
+Open the website in a new background tab: Type a web address + ⌘ + Return
+
+Jump to the address bar: ⌘ + L
+
+Remove predictions from your address bar: Down arrow to highlight + Shift + Fn + Delete (Forward Delete or fn-Delete on a laptop)
+
+Move cursor to the address bar: Ctrl + F5
+
+3. Webpage Shortcuts:
+
+Compose a new email message with a link to the current page: ⌘ + Shift + I
+
+Open options to print the current page: ⌘ + P
+
+Open options to save the current page: ⌘ + S
+
+Open the Page Setup dialog: ⌘ + Option + P
+
+Reload your current page, ignoring cached content: ⌘ + Shift + R
+
+Stop the page loading: Esc
+
+Browse clickable items moving forward: Tab
+
+Browse clickable items moving backward: Shift + Tab
+
+Open a file from your computer in Google Chrome: ⌘ + O + Select a file
+
+Display non-editable HTML source code for the current page: ⌘ + Option + U
+
+Open the JavaScript Console: ⌘ + Option + J
+
+Save your current webpage as a bookmark: ⌘ + D
+
+Save all open tabs as bookmarks in a new folder: ⌘ + Shift + D
+
+Make everything on the page bigger: ⌘ +
+
+Make everything on the page smaller: ⌘ -
+
+Return everything on the page to the default size: ⌘ 0
+
+Scroll down a webpage, a screen at a time: Space
+
+Scroll up a webpage, a screen at a time: Shift + Space
+
+Search the web: ⌘ + Option + F
+
+Move your cursor to the beginning of the previous word in a text field: Option + Left Arrow
+
+Move your cursor to the back of the next word in a text field: Option + Right Arrow
+
+Delete the previous word in a text field: Option + Delete
+
+Open your home page in the current tab: ⌘ + Shift + H 
+
+----------------------------------------------------------------------------------------------------------------------
 
 Objective: {objective} 
 """
