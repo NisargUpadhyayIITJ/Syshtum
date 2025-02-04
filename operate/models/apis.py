@@ -13,7 +13,8 @@ from PIL import Image
 from ultralytics import YOLO
 from loguru import logger
 import time 
-from paddleocr import PaddleOCR, draw_ocr
+import requests
+
 
 from config import Config
 from exceptions import ModelNotRecognizedException
@@ -40,6 +41,9 @@ async def get_next_action(model, messages, objective, session_id):
     if config.verbose:
         print("[Self-Operating Computer][get_next_action]")
         print("[Self-Operating Computer][get_next_action] model", model)
+    if model == "local_qwen":
+        logger.debug("Model used is Qwen 2.5 VL")
+        return call_show_ui(messages), None    
     if model == "gpt-4":
         logger.debug("Model used is GPT-4")
         return call_gpt_4o(messages), None
@@ -204,7 +208,7 @@ def call_gemini_pro_vision(messages, objective):
             print(
                 "[get_next_action][call_gemini_pro_vision] content",
                 content,
-            )
+            )    
         end = time.time()
         logger.success(f"Call_gemini_pro_vision executed in {end - begin}")
         return content
@@ -582,6 +586,7 @@ def call_ollama_llava(messages):
             traceback.print_exc()
         return call_ollama_llava(messages)
     
+    
 def call_hf_qwen(messages):
     if config.verbose:
         print("[call_hf_qwen]")
@@ -662,6 +667,87 @@ def call_hf_qwen(messages):
         if config.verbose:
             traceback.print_exc()
         return call_hf_qwen(messages)
+    
+def call_show_ui(messages):
+    """
+    Get the next action for Self-Operating Computer using Gemini Pro Vision
+    """
+    begin = time.time()
+    # sleep for a second
+    time.sleep(1)
+
+    try:
+        screenshots_dir = "screenshots"
+        if not os.path.exists(screenshots_dir):
+            os.makedirs(screenshots_dir)
+
+        screenshot_filename = os.path.join(screenshots_dir, "screenshot.png")
+        # Call the function to capture the screen with the cursor
+        capture_screen_with_cursor(screenshot_filename)
+        #image = Image.open(screenshot_filename)
+        #messages.append(Image.open(screenshot_filename))
+        # sleep for a second
+
+        with open(screenshot_filename, "rb") as img_file:
+            img_base64 = base64.b64encode(img_file.read()).decode("utf-8")
+
+        if len(messages) == 1:
+            user_prompt = get_user_first_message_prompt()
+        else:
+            user_prompt = get_user_prompt()
+
+        vision_message ={
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": user_prompt},
+                    # {"type": "text", "text": PAST_ACTION},
+                    {"type": "image", "image": f"data:image/jpeg;base64,{img_base64}"},
+                ],
+            }
+        messages.append(vision_message)
+
+        # Send the request
+        response = requests.post(
+            url='http://localhost:8001/generate/',
+            json={
+                "messages": messages
+            }    
+        )
+        data = response.json()
+        print(data)
+        content = data["text"]
+        print(content)
+        logger.success("Response received")
+
+        # Remove the last appended vision message to reduce input tokens
+        messages.pop()
+
+        # Convert response image back to PIL Image if needed
+        # result_image = Image.open(BytesIO(base64.b64decode(data["image"])))
+        # print("Text output:", content)
+        # result_image.save("result.png")  # Save the result image if needed
+
+        logger.success("Starting Jsonification.")
+
+        content = clean_json(content)
+        print(content)
+        print(type(content))
+        logger.success("Cleaning done.")
+
+        assistant_message = {"role": "assistant", "content": content}
+        messages.append(assistant_message)
+
+        content = json.loads(content)
+        print(content)    
+        print(type(content))
+        logger.success("Jsonified.")
+
+        end = time.time()
+        logger.success(f"Call_show_ui executed in {end - begin}")
+        return content
+
+    except Exception as e:
+        return call_show_ui(messages) 
 
 def get_last_assistant_message(messages):
     """
