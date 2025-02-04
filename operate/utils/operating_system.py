@@ -45,16 +45,19 @@ class OperatingSystem:
         x_percentage,
         y_percentage,
         duration=0.8,
-        circle_radius=50,
-        circle_duration=0.5,
     ):
         logger.info("Percentage calculated with click function executed by OS.")
         try:
-            screen_width, screen_height = pyautogui.size()
-            x_pixel = int(screen_width * float(x_percentage))
-            y_pixel = int(screen_height * float(y_percentage))
+            if(int(x_percentage) < 1):
+                screen_width, screen_height = pyautogui.size()
+                x_pixel = int(screen_width * float(x_percentage))
+                y_pixel = int(screen_height * float(y_percentage))
+            else:
+                x_pixel = x_percentage
+                y_pixel = y_percentage
 
             pyautogui.moveTo(x_pixel, y_pixel, duration=duration)
+            logger.debug(f"Moving to X: {x_pixel}, Y: {y_pixel}")
 
             pyautogui.click(x_pixel, y_pixel)
         except Exception as e:
