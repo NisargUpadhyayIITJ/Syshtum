@@ -8,6 +8,28 @@ from openai import OpenAI
 from huggingface_hub import InferenceClient
 from loguru import logger
 from prompt_toolkit.shortcuts import input_dialog
+import time
+
+class GeminiClient:
+    def __init__(self):
+        self.api_keys = [
+            os.getenv("GEMINI_API_KEY_1"),  # Replace with actual keys
+            os.getenv("GEMINI_API_KEY_2"),
+            os.getenv("GEMINI_API_KEY_3")
+        ]
+        self.current_key_index = -1
+
+    def initialize_client(self):
+        self.current_key_index = (self.current_key_index + 1) % len(self.api_keys)
+        logger.success(self.api_keys)
+        api_key = self.api_keys[self.current_key_index]
+        # Configure the Google Generative AI with the current API key
+        genai.configure(api_key=api_key)
+        logger.debug(api_key)
+        
+        # Initialize your model or client here
+        model = genai.GenerativeModel('gemini-1.5-pro')  # Adjust model name as needed
+        return model
 
 
 class Config:
@@ -31,6 +53,7 @@ class Config:
 
     def __init__(self):
         load_dotenv()
+        self.gemini_client = GeminiClient()
         self.verbose = False
         self.openai_api_key = (
             None  # instance variables are backups in case saving to a `.env` fails
@@ -81,10 +104,8 @@ class Config:
                 print(
                     "[Config][initialize_google] no cached google_api_key, try to get from env."
                 ) 
-            api_key = os.getenv("GOOGLE_API_KEY")
-            logger.success(f"Gemini_API from zshrc : {api_key}") 
-        genai.configure(api_key=api_key, transport="rest")
-        model = genai.GenerativeModel("gemini-2.0-flash-exp")
+            logger.debug("Model about to initiate")    
+            model = self.gemini_client.initialize_client()
 
         return model
 
