@@ -174,3 +174,4 @@ cython_debug/
 screenshots
 ocr 
 labeled_images
+.DS_Store
