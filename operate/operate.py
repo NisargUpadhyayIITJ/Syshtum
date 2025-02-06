@@ -118,7 +118,7 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
                 break
 
             loop_count += 1
-            if loop_count > 10:
+            if loop_count > 30:
                 break
         except ModelNotRecognizedException as e:
             print(
