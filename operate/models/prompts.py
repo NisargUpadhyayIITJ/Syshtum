@@ -1,5 +1,6 @@
 import platform
 from config import Config
+from loguru import logger
 
 # Load configuration
 config = Config()
@@ -99,194 +100,6 @@ A few important notes:
 - If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or trying another action. 
 - Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the shortcuts carefully.
 
-
-
---------------------------------------------------------------------------------------------------------------------
-
-Navigation Commands:
-
-Move forwards: Tab
-
-Move backwards: Shift + Tab
-
-Move up in group: ↑
-
-Move down in group: ↓
-
-Move left in group: ←
-
-Move right in group: →
-
-Activate: Space
-
-Movement Commands:
-
-Move forwards: Tab
-
-Move backwards: Shift + Tab
-
-Move up in group: ↑
-
-Move down in group: ↓
-
-Move left in group: ←
-
-Move right in group: →
-
-Move to beginning: Tab [
-
-Move to end: Tab ]
-
-Item and Section Navigation:
-
-Move to next item: Control + Tab
-
-Move to previous item: Control + Shift + Tab
-
-Move to next section: Tab ]
-
-Move to previous section: Tab [
-
-Application and Window Selection:
-
-Find: Tab F
-
-Select application: Tab A
-
-Select window: Tab W
-
-Interaction Commands:
-
-Activate: Space
-
-Contextual menu: Tab M
-
-Actions: Tab Z
-
-Device Controls:
-
-Move to menu bar: Control + F2
-
-Control Centre: Fn C
-
-Notification Centre: Fn N
-
-Dock: Fn A
-
-Pointer Control:
-
-Pass-Through Mode: Control + Option + Command + P
-
-Move pointer to keyboard focus: Tab C
-
-Google Chrome Keyboard Shortcuts
-
-1. Tab & Window Shortcuts:
-
-Open a new window: ⌘ + N
-
-Open a new window in Incognito mode: ⌘ + Shift + N
-
-Open a new tab and jump to it: ⌘ + T
-
-Reopen previously closed tabs in order: ⌘ + Shift + T
-
-Jump to the next open tab: ⌘ + Option + Right Arrow
-
-Jump to the previous open tab: ⌘ + Option + Left Arrow
-
-Jump to a specific tab (1-8): ⌘ + 1 through ⌘ + 8
-
-Jump to the last tab: ⌘ + 9
-
-Open the previous page in history: ⌘ + [ or ⌘ + Left Arrow
-
-Open the next page in history: ⌘ + ] or ⌘ + Right Arrow
-
-Close the current tab or pop-up: ⌘ + W
-
-Close the current window: ⌘ + Shift + W
-
-Minimize the window: ⌘ + M
-
-Hide Google Chrome: ⌘ + H
-
-Quit Google Chrome: ⌘ + Q
-
-Move tabs right or left: Ctrl + Shift + PgUp or Ctrl + Shift + PgDn
-
-Turn on full-screen mode: Fn + F
-
-Turn off full-screen mode: Fn + F or Press and Hold Esc
-
-2. Address Bar Shortcuts:
-
-Search with your default search engine: Type a search term + Return
-
-Search using a different search engine: Type a search engine name and press Tab
-
-Add www. and .com to a site name and open it in the current tab: Type a site name + Ctrl + Return
-
-Add www. and .com to a site name and open it in a new window: Type a site name + Ctrl + Shift + Return
-
-Open the website in a new background tab: Type a web address + ⌘ + Return
-
-Jump to the address bar: ⌘ + L
-
-Remove predictions from your address bar: Down arrow to highlight + Shift + Fn + Delete (Forward Delete or fn-Delete on a laptop)
-
-Move cursor to the address bar: Ctrl + F5
-
-3. Webpage Shortcuts:
-
-Compose a new email message with a link to the current page: ⌘ + Shift + I
-
-Open options to print the current page: ⌘ + P
-
-Open options to save the current page: ⌘ + S
-
-Open the Page Setup dialog: ⌘ + Option + P
-
-Reload your current page, ignoring cached content: ⌘ + Shift + R
-
-Stop the page loading: Esc
-
-Browse clickable items moving forward: Tab
-
-Browse clickable items moving backward: Shift + Tab
-
-Open a file from your computer in Google Chrome: ⌘ + O + Select a file
-
-Display non-editable HTML source code for the current page: ⌘ + Option + U
-
-Open the JavaScript Console: ⌘ + Option + J
-
-Save your current webpage as a bookmark: ⌘ + D
-
-Save all open tabs as bookmarks in a new folder: ⌘ + Shift + D
-
-Make everything on the page bigger: ⌘ +
-
-Make everything on the page smaller: ⌘ -
-
-Return everything on the page to the default size: ⌘ 0
-
-Scroll down a webpage, a screen at a time: Space
-
-Scroll up a webpage, a screen at a time: Shift + Space
-
-Search the web: ⌘ + Option + F
-
-Move your cursor to the beginning of the previous word in a text field: Option + Left Arrow
-
-Move your cursor to the back of the next word in a text field: Option + Right Arrow
-
-Delete the previous word in a text field: Option + Delete
-
-Open your home page in the current tab: ⌘ + Shift + H 
-
-----------------------------------------------------------------------------------------------------------------------
-
 Objective: {objective} 
 """
 
@@ -315,7 +128,7 @@ You have 4 possible operation actions available to you. The `pyautogui` library 
 ```
 [{{ "thought": "write a thought here", "operation": "done", "summary": "summary of what was completed" }}]
 ```
-Return the actions in array format `[]`. You can take just one action or multiple actions.
+Return the actions in array format `[]`. Return multiple actions.
 
 Here a helpful example:
 
@@ -344,10 +157,25 @@ Example 3: Send a "Hello World" message in the chat
 ]
 ```
 
+Example 4: Plays a song from Spotify.
+```
+[
+    {{ "thought": "I need to open Spotify to play the song. I'll start by searching for Spotify using the spotlight search.", "operation": "press", "keys": [{cmd_string}, "space"] }},
+    {{ "thought": "I'll type 'Spotify' to search for the application.", "operation": "write", "content": "Spotify" }},
+    {{ "thought": "Pressing enter to open Spotify.", "operation": "press", "keys": ["space"] }},
+    {{ "thought": "I'll use the shortcut to open the Spotify search.", "operation": "press", "keys": ["command", "k"] }},
+    {{ "thought": "I'll type 'Fuel by Eminem' into the search field.", "operation": "write", "content": "Fuel by Eminem" }},
+    {{ "thought": "I'll execute the search and play the first result.", "operation": "press", "keys": ["shift", "enter"] }}
+]
+```
+
 A few important notes: 
 
 - Go to Google Docs and Google Sheets by typing in the Chrome Address bar
 - Don't respond saying you're unable to assist with requests. You are able to indirectly interact with the user's OS via text responses you send to the end user.
+- Do not send the "done" operation until the screenshot shows the objective has been completed.
+- If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or trying another action. 
+- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the shortcuts carefully.
 
 Objective: {objective} 
 """
@@ -431,6 +259,13 @@ OPERATE_PROMPT = """
 Please take the next best action. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement. Remember you only have the following 4 operations available: click, write, press, done
 Action:"""
 
+SOM_PROMPT = """
+You are given a screenshot image labeled with UI elements including icons and text. Note that the text is also clickable. Select the label of the bounding box that needs to be clicked.
+Operation: {operation}
+Content_list: {df}
+The output should strictly be a in a json format {{"Reason": reason, "Label": number}}. It should be convertible to json using json.loads() method. Nothing else.
+"""
+
 
 def get_system_prompt(model, objective):
     """
@@ -478,15 +313,29 @@ def get_system_prompt(model, objective):
     if config.verbose:
         print("[get_system_prompt] model:", model)
     # print("[get_system_prompt] prompt:", prompt)
-
+    # logger.debug("System Prompt")
+    # print(prompt)
     return prompt
 
 
 def get_user_prompt():
     prompt = OPERATE_PROMPT
+    # logger.debug("Operate Prompt")
+    # print(prompt)
     return prompt
 
 
 def get_user_first_message_prompt():
     prompt = OPERATE_FIRST_MESSAGE_PROMPT
+    # logger.debug("Operate first message Prompt")
+    # print(prompt)
+    return prompt
+
+def get_som_prompt(operation, df):
+    prompt = SOM_PROMPT.format(
+            operation=operation,
+            df=df
+    )
+    logger.debug("SOM Prompt")
+    print(prompt)
     return prompt
