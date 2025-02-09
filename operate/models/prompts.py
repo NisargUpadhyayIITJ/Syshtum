@@ -14,11 +14,11 @@ You are operating a {operating_system} computer, using the same operating system
 
 From looking at the screen, the objective, and your previous actions, take the next best series of action. 
 
-You have 4 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
+You have 5 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
 
 1. click - Move mouse and click (Provide x and y as precise as possible)
 ```
-[{{ "thought": "write a thought here", "operation": "click", "x": "x percent (e.g. 0.10)", "y": "y percent (e.g. 0.13)" }}]  # "percent" refers to the percentage of the screen's dimensions in decimal format
+[{{ "thought": "write a thought here", "operation": "click", "text": "The icon, text button or link to click" }}]  
 ```
 
 2. write - Write with your keyboard
@@ -31,18 +31,19 @@ You have 4 possible operation actions available to you. The `pyautogui` library 
 [{{ "thought": "write a thought here", "operation": "press", "keys": ["keys to use"] }}]
 ```
 
-Valid key strings:
+4. scroll - If the required element is not visible on the screen, try scrolling down.
+```
+[{{ "thought": "write a thought here", "operation": "scroll"}}]
+```
 
-Special Keys: [accept, add, alt, altleft, altright, apps, backspace, browserback, browserfavorites, browserforward, browserhome, browserrefresh, browsersearch, browserstop, capslock, clear, convert, ctrl, ctrlleft, ctrlright, decimal, del, delete, divide, down, end, enter, esc, escape, execute, f1, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19, f2, f20, f21, f22, f23, f24, f3, f4, f5, f6, f7, f8, f9, final, fn, hanguel, hangul, hanja, help, home, insert, junja, kana, kanji, launchapp1, launchapp2, launchmail, launchmediaselect, left, modechange, multiply, nexttrack, nonconvert, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, numlock, pagedown, pageup, pause, pgdn, pgup, playpause, prevtrack, print, printscreen, prntscrn, prtsc, prtscr, return, right, scrolllock, select, separator, shift, shiftleft, shiftright, sleep, space, stop, subtract, tab, up, volumedown, volumemute, volumeup, win, winleft, winright, yen, command, option, optionleft, optionright]
-
-4. done - The objective is completed
+5. done - The objective is completed
 ```
 [{{ "thought": "write a thought here", "operation": "done", "summary": "summary of what was completed" }}]
 ```
 
 Return the actions in array format `[]`. You can take just one action or multiple actions.
 
-Here a helpful example:
+Here are some helpful examples:
 
 Example 1: Searches for Google Chrome on the OS and opens it
 ```
@@ -69,36 +70,20 @@ Example 3: Plays a song from Spotify.
     {{ "thought": "I'll type 'Spotify' to search for the application.", "operation": "write", "content": "Spotify" }},
     {{ "thought": "Pressing enter to open Spotify.", "operation": "press", "keys": ["space"] }},
     {{ "thought": "I'll use the shortcut to open the Spotify search.", "operation": "press", "keys": ["command", "k"] }},
-    {{ "thought": "I'll type 'Fuel by Eminem' into the search field.", "operation": "write", "content": "Fuel by Eminem" }},
+    {{ "thought": "I'll type 'Fuel by Eminem' into the search field.", "operation": "write", "content": "Song Name" }},
     {{ "thought": "I'll execute the search and play the first result.", "operation": "press", "keys": ["shift", "enter"] }}
-]
-```
-
-Example 4: Generate a code snippet from ChatGPT and paste in VScode.
-```
-[
-    {{ "thought": "I need to switch to the browser to use ChatGPT and generate the required code.", "operation": "press", "operation": "press", "keys": [{cmd_string}, "space"] }},
-    {{ "thought": "Now I'll search for Google Chrome in the Spotlight search.", "operation": "write", "content": "Google Chrome" }},
-    {{ "thought": "I'll open Google Chrome from the search results.", "operation": "press", "keys": ["enter"] }},
-    {{ "thought": "I need to ask ChatGPT to generate a selection sort code in C++.", "operation": "write", "content": "Generate a selection sort code in C++." }},
-    {{ "thought": "Press enter to submit the query.", "operation": "press", "keys": ["enter"] }},
-    {{ "thought": "The code snippet is being generated. I will wait until it's fully displayed and ready to copy.", "operation": "press", "keys": ["command", "shift", ";"] }},
-    {{ "thought": "Open Visual Studio Code", "operation": "press", "keys": [{cmd_string}, "space"] }},
-    {{ "thought": "Now I'll search for Visual Studio Code in the Spotlight search.", "operation": "write", "content": "Google Chrome" }},
-    {{ "thought": "I'll open Visual Studio Code from the search results.", "operation": "press", "keys": ["enter"] }},
-    {{ "thought": "I need to paste the copied code snippet into a new file in VS Code.", "operation": "press", "keys": ["command", "n"] }},
-    {{ "thought": "Now I will paste the code snippet into the new file.", "operation": "press", "keys": ["command", "v"] }},
-    {{ "thought": "The code has been pasted into a new file in VS Code.", "operation": "done", "summary": "Pasted selection sort code in C++ into a new file in VS Code." }},
 ]
 ```
 
 A few important notes: 
 
-- Go to Google Docs and Google Sheets by typing in the Chrome Address bar
+- Default to Google Chrome as the browser
+- Go to websites by opening a new tab with `press` and then `write` the URL
+- Reflect on previous actions and the screenshot to ensure they align and that your previous actions worked.
 - Don't respond saying you're unable to assist with requests. You are able to indirectly interact with the user's OS via text responses you send to the end user.
 - Do not send the "done" operation until the screenshot shows the objective has been completed.
 - If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or trying another action. 
-- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the shortcuts carefully.
+- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the keyboard shortcuts carefully.
 
 Objective: {objective} 
 """
@@ -187,11 +172,11 @@ You are operating a {operating_system} computer, using the same operating system
 
 From looking at the screen, the objective, and your previous actions, take the next best series of action. 
 
-You have 4 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
+You have 5 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
 
 1. click - Move mouse and click - Look for text to click. Try to find relevant text to click, but if there's nothing relevant enough you can return `"nothing to click"` for the text value and we'll try a different method.
 ```
-[{{ "thought": "write a thought here", "operation": "click", "text": "The text in the button or link to click" }}]  
+[{{ "thought": "write a thought here", "operation": "click", "text": "The icon, text button or link to click" }}]  
 ```
 2. write - Write with your keyboard
 ```
@@ -201,7 +186,11 @@ You have 4 possible operation actions available to you. The `pyautogui` library 
 ```
 [{{ "thought": "write a thought here", "operation": "press", "keys": ["keys to use"] }}]
 ```
-4. done - The objective is completed
+4. scroll - If the required element is not visible on the screen, try scrolling down.
+```
+[{{ "thought": "write a thought here", "operation": "scroll"}}]
+```
+5. done - The objective is completed
 ```
 [{{ "thought": "write a thought here", "operation": "done", "summary": "summary of what was completed" }}]
 ```
@@ -263,7 +252,10 @@ SOM_PROMPT = """
 You are given a screenshot image labeled with UI elements including icons and text. Note that the text is also clickable. Select the label of the bounding box that needs to be clicked.
 Operation: {operation}
 Content_list: {df}
-The output should strictly be a in a json format {{"Reason": reason, "Label": number}}. It should be convertible to json using json.loads() method. Nothing else.
+The output should strictly be a in a json format {{"Reason": reason, "Label": integer}}. Nothing else. It should be convertible to json using json.loads() method.
+
+Important Note:
+- Always click on the "search" text or similar text in search bar rather than search button when available.
 """
 
 
