@@ -194,15 +194,16 @@ def get_click_position_in_percent(coordinates, image_size):
 def add_custom_labels(base64_data):
     logger.debug("In the custom add labels function.")
     image_bytes = base64.b64decode(base64_data)
-    logger.debug("Created image copies for debug and original versions")
 
     # results = yolo_model(image_labeled)
+    begin = time.time()
     response = requests.post(
             url='http://localhost:8001/label/',
             json={"image_base64": base64_data}    
         )
+    end = time.time()
 
-    logger.debug("Response received") 
+    logger.success(f"Response received. Took {end - begin} seconds") 
 
     data = response.json()
     image_labeled = data["image"]
