@@ -106,6 +106,8 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
     session_id = None
 
     while True:
+        time.sleep(2)
+        logger.success("2 second gap before screenshot to let the previous action complete.")
         if config.verbose:
             print("[Self Operating Computer] loop_count", loop_count)
         try:
@@ -161,8 +163,9 @@ def operate(operations, model):
             y = operation.get("y")
             click_detail = {"x": x, "y": y}
             operate_detail = click_detail
-
             operating_system.mouse(click_detail)
+        elif operate_type == "scroll":
+            operating_system.scroll()
         elif operate_type == "done":
             summary = operation.get("summary")
 
