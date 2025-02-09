@@ -727,16 +727,22 @@ async def call_custom_gpt(messages, objective, model):
     }
     messages.append(vision_message)
 
+    begin_1 = time.time()
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=messages,
         presence_penalty=1,
         frequency_penalty=1,
     )
+    end_1 = time.time()
+    logger.success(f"GPT-4o responed on {end_1 - begin_1} seconds")
 
     content = response.choices[0].message.content
 
     content = clean_json(content)
+
+    #Removes the vision message to reduce input tokens.
+    messages.pop()
 
     assistant_message = {"role": "assistant", "content": content}
 
@@ -782,12 +788,15 @@ async def call_custom_gpt(messages, objective, model):
                 ],
             }
 
+            begin_2 = time.time()
             response = client.chat.completions.create(
                 model="gpt-4o",
                 messages=[label_message],
                 presence_penalty=1,
                 frequency_penalty=1,
             )
+            end_2 = time.time()
+            logger.success(f"GPT-4o responed for click on {end_2 - begin_2} seconds")
 
             response = response.choices[0].message.content
             logger.debug("Response")
