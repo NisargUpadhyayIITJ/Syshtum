@@ -56,9 +56,18 @@ class OperatingSystem:
                 x_pixel = x_percentage
                 y_pixel = y_percentage
 
-            pyautogui.moveTo(x_pixel, y_pixel, duration=duration)
+            pyautogui.moveTo(x_pixel, y_pixel, duration, pyautogui.easeInBounce)
             logger.debug(f"Moving to X: {x_pixel}, Y: {y_pixel}")
 
             pyautogui.click(x_pixel, y_pixel)
         except Exception as e:
             print("[OperatingSystem][click_at_percentage] error:", e)
+
+    def scroll(self):
+        logger.info("Scroll function executed by OS.")
+        try:
+            pyautogui.scroll(-10)
+
+        except Exception as e:
+            print("[OperatingSystem][mouse] error:", e)
+    
