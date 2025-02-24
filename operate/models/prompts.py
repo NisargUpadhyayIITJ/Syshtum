@@ -94,9 +94,9 @@ You are operating a {operating_system} computer, using the same operating system
 
 From looking at the screen, the objective, and your previous actions, take the next best series of action. 
 
-You have 4 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
+You have 5 possible operation actions available to you. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement.
 
-1. click - Move mouse and click - We labeled the clickable elements with red bounding boxes and IDs. Label IDs are in the following format with `x` being a number: `~x`
+1. click - Move mouse and click - We labeled the clickable elements with bounding boxes and IDs. Label IDs are in the following format with `x` being a number: `~x`
 ```
 [{{ "thought": "write a thought here", "operation": "click", "label": "~x" }}]  # 'percent' refers to the percentage of the screen's dimensions in decimal format
 ```
@@ -108,12 +108,15 @@ You have 4 possible operation actions available to you. The `pyautogui` library 
 ```
 [{{ "thought": "write a thought here", "operation": "press", "keys": ["keys to use"] }}]
 ```
-
-4. done - The objective is completed
+4. scroll - If the required element is not visible on the screen, try scrolling down.
+```
+[{{ "thought": "write a thought here", "operation": "scroll"}}]
+```
+5. done - The objective is completed
 ```
 [{{ "thought": "write a thought here", "operation": "done", "summary": "summary of what was completed" }}]
 ```
-Return the actions in array format `[]`. Return multiple actions.
+Return the actions in array format `[]`. You can take just one action or multiple actions.
 
 Here a helpful example:
 
@@ -156,11 +159,13 @@ Example 4: Plays a song from Spotify.
 
 A few important notes: 
 
-- Go to Google Docs and Google Sheets by typing in the Chrome Address bar
+- Default to Google Chrome as the browser
+- Go to websites by opening a new tab with `press` and then `write` the URL
+- Reflect on previous actions and to ensure they align and that your previous actions worked.
 - Don't respond saying you're unable to assist with requests. You are able to indirectly interact with the user's OS via text responses you send to the end user.
 - Do not send the "done" operation until the screenshot shows the objective has been completed.
-- If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or trying another action. 
-- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the shortcuts carefully.
+- If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or scrolling down. 
+- Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the keyboard shortcuts carefully.
 
 Objective: {objective} 
 """
@@ -238,14 +243,14 @@ Objective: {objective}
 """
 
 OPERATE_FIRST_MESSAGE_PROMPT = """
-Please take the next best action. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement. Remember you only have the following 4 operations available: click, write, press, done
+Please take the next best action. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement. Remember you only have the following 5 operations available: click, write, press, scroll, done
 
 You just started so you are in the terminal app and your code is running in this terminal tab. To leave the terminal, search for a new program on the OS. 
 
 Action:"""
 
 OPERATE_PROMPT = """
-Please take the next best action. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement. Remember you only have the following 4 operations available: click, write, press, done
+Please take the next best action. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement. Remember you only have the following 5 operations available: click, write, press, scroll, done
 Action:"""
 
 SOM_PROMPT = """
@@ -277,7 +282,7 @@ def get_system_prompt(model, objective):
         os_search_str = ["win"]
         operating_system = "Linux"
 
-    if model == "gpt-4-with-som":
+    if model == "gpt-4-with-som" or model == "fast-gpt" or model == "fast-gemini":
         prompt = SYSTEM_PROMPT_LABELED.format(
             objective=objective,
             cmd_string=cmd_string,
