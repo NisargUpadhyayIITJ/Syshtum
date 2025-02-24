@@ -101,6 +101,9 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
     system_message = {"role": "system", "content": system_prompt}
     messages = [system_message]
 
+    if model == "fast-gemini":
+        messages = [system_prompt]
+
     loop_count = 0
 
     session_id = None
@@ -111,7 +114,7 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
         if config.verbose:
             print("[Self Operating Computer] loop_count", loop_count)
         try:
-            operations, session_id = asyncio.run(
+            [operations, messages], session_id  = asyncio.run(
                 get_next_action(model, messages, objective, session_id)
             )
 
