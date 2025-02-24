@@ -28,7 +28,7 @@ class GeminiClient:
         logger.debug(api_key)
         
         # Initialize your model or client here
-        model = genai.GenerativeModel('gemini-1.5-pro')  # Adjust model name as needed
+        model = genai.GenerativeModel('gemini-2.0-flash')  # Adjust model name as needed
         return model
 
 
