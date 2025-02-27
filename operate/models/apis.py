@@ -62,6 +62,10 @@ async def get_next_action(model, messages, objective, session_id):
         logger.debug("Model used is Custom GPT")
         operation = await call_custom_gpt(messages, objective, model)
         return operation, None
+    if model == "custom-gemini":
+        logger.debug("Model used is Custom Gemini")
+        operation = await call_custom_gemini(messages, objective, model)
+        return operation, None
     if model == "fast-gpt":
         logger.debug("Model used is Fast GPT")
         operation = await call_fast_gpt(messages, objective, model)
@@ -770,7 +774,7 @@ async def call_custom_gpt(messages, objective, model):
             operation,
         )
         if operation.get("operation") == "click":
-            logger.success("Click operation recieved.")
+            logger.success("Click operation received.")
             img_base64_labeled, parsed_content_list = add_custom_labels(img_base64)
 
             df = pd.DataFrame(parsed_content_list)
@@ -866,6 +870,184 @@ async def call_custom_gpt(messages, objective, model):
         if config.verbose:
             print(
                 "[Self Operating Computer][call_gpt_4_vision_preview_labeled] new processed_content",
+                processed_content,
+            )
+    return processed_content, messages
+
+async def call_custom_gemini(messages, objective, model):
+    time.sleep(1)
+
+    client = config.initialize_google()
+    logger.debug("Client Initailized")
+
+    confirm_system_prompt(messages, objective, model)
+
+    screenshots_dir = "screenshots"
+    if not os.path.exists(screenshots_dir):
+        os.makedirs(screenshots_dir)
+
+    screenshot_filename = os.path.join(screenshots_dir, "screenshot.png")
+    # Call the function to capture the screen with the cursor
+    capture_screen_with_cursor(screenshot_filename)
+
+    with open(screenshot_filename, "rb") as img_file:
+        img_base64 = base64.b64encode(img_file.read()).decode("utf-8")
+
+    if len(messages) == 1:
+        user_prompt = get_user_first_message_prompt()
+    else:
+        user_prompt = get_user_prompt()
+
+    if config.verbose:
+        print(
+            "[call_gemini_labeled] user_prompt",
+            user_prompt,
+        )
+
+    vision_message = {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": user_prompt},
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/jpeg;base64,{img_base64}"
+                },
+            },
+        ],
+    }
+    messages.append(vision_message)
+
+    begin_1 = time.time()
+    response = client.chat.completions.create(
+        model="gemini-2.0-flash",
+        messages=messages,
+        presence_penalty=1,
+        frequency_penalty=1,
+    )
+    end_1 = time.time()
+    logger.success(f"Gemini responed on {end_1 - begin_1} seconds")
+
+    content = response.choices[0].message.content
+
+    content = clean_json(content)
+
+    #Removes the vision message to reduce input tokens.
+    messages.pop()
+
+    assistant_message = {"role": "assistant", "content": content}
+
+    messages.append(assistant_message)
+
+    content = json.loads(content)
+    if config.verbose:
+        print(
+            "[call_gemini_labeled] content",
+            content,
+        )
+
+    processed_content = []
+    
+    for operation in content:
+        print(
+            "[call_gemini_labeled] for operation in content",
+            operation,
+        )
+        if operation.get("operation") == "click":
+            logger.success("Click operation received.")
+            img_base64_labeled, parsed_content_list = add_custom_labels(img_base64)
+
+            df = pd.DataFrame(parsed_content_list)
+            df['ID'] = '~' + df.index.astype(str)
+
+            label_coordinates = dict(zip(df['ID'], df['bbox']))
+            logger.success("Label Coordinates")
+            print(label_coordinates)
+
+            df = df.drop(columns=["bbox"])
+
+            label_message = {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": get_som_prompt(operation.get("thought"), df.to_markdown())},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{img_base64_labeled}"
+                        },
+                    },
+                ],
+            }
+
+            begin_2 = time.time()
+            response = client.chat.completions.create(
+                model="gemini-2.0-flash",
+                messages=[label_message],
+                presence_penalty=1,
+                frequency_penalty=1,
+            )
+            end_2 = time.time()
+            logger.success(f"Gemini responed for click on {end_2 - begin_2} seconds")
+
+            response = response.choices[0].message.content
+            logger.debug("Response")
+            print(response)
+            content = clean_json(response)
+
+            dictionary = json.loads(content)
+
+            logger.debug("Reason")
+            print(dictionary["Reason"])
+
+            label = dictionary["Label"]
+            logger.success(f"VLM Output Label: {label}")
+            label = "~" + str(label)
+
+            coordinates = get_label_coordinates(label, label_coordinates)
+            if config.verbose:
+                print(
+                    "[Self Operating Computer][call_gemini_labeled] coordinates",
+                    coordinates,
+                )
+            image = Image.open(
+                io.BytesIO(base64.b64decode(img_base64))
+            )
+            image_size = image.size
+            click_position_percent = get_click_position_in_percent(
+                coordinates, image_size
+            )
+            if config.verbose:
+                print(
+                    "[Self Operating Computer][call_gemini_labeled] click_position_percent",
+                    click_position_percent,
+                )
+            if not click_position_percent:
+                print(
+                    f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] Failed to get click position in percent. Trying another method {ANSI_RESET}"
+                )
+                return call_gemini_pro_vision(messages)
+            
+            x_percent = f"{click_position_percent[0]:.2f}"
+            y_percent = f"{click_position_percent[1]:.2f}"
+            operation["x"] = x_percent
+            operation["y"] = y_percent
+            if config.verbose:
+                print(
+                    "[Self Operating Computer][call_gemini_labeled] new click operation",
+                    operation,
+                )
+            processed_content.append(operation)
+        else:
+            if config.verbose:
+                print(
+                    "[Self Operating Computer][call_gemini_labeled] .append none click operation",
+                    operation,
+                )
+            processed_content.append(operation)
+
+        if config.verbose:
+            print(
+                "[Self Operating Computer][call_gemini_labeled] new processed_content",
                 processed_content,
             )
     return processed_content, messages
