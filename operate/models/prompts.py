@@ -163,7 +163,6 @@ A few important notes:
 - Go to websites by opening a new tab with `press` and then `write` the URL
 - Reflect on previous actions and to ensure they align and that your previous actions worked.
 - Don't respond saying you're unable to assist with requests. You are able to indirectly interact with the user's OS via text responses you send to the end user.
-- Do not send the "done" operation until the screenshot shows the objective has been completed.
 - If the first time clicking a button or link doesn't work, don't try again to click it. Get creative and try something else such as clicking a different button or scrolling down. 
 - Try to avoid clicking if the task can be executed by a keyboard shortcut. Keep this as a priority. Choose the keyboard shortcuts carefully.
 
