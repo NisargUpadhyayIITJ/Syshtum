@@ -40,8 +40,11 @@ def main_entry(request: PromptRequest) -> None:
             terminal_prompt = request.prompt,
             #voice_mode=voice_mode,
         )
+        return JSONResponse(status_code=200, content={"status": "OK"})
     except KeyboardInterrupt:
         print("\nExiting...")
+
+    return JSONResponse(status_code=500, content={"status": "Error"})    
 
 @app.post("/health")
 def health_check():
