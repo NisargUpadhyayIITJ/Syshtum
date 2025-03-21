@@ -31,7 +31,7 @@ config = Config()
 operating_system = OperatingSystem()
 
 
-def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
+async def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
     """
     Main function for the Self-Operating Computer.
 
