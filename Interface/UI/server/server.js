@@ -11,6 +11,12 @@ const getData = async (data) => {
     }
 }
 
+
+const ValidateKey = async (data)=>{
+    const response = await axios.post('http://127.0.0.1:8002/validate', {...data});
+    console.log(response);  
+    return response.data;
+}
 const SaveApiKey = async (data)=>{
     const response = await axios.post('http://127.0.0.1:8002/enter_api', {...data});
     console.log(response);  
@@ -19,5 +25,6 @@ const SaveApiKey = async (data)=>{
 
 export {
     getData,
-    SaveApiKey
+    SaveApiKey,
+    ValidateKey
 };

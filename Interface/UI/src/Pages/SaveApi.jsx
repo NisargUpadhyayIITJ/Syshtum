@@ -1,28 +1,50 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react';
-import { getData } from '../../server/server.js';
-
+import { SaveApiKey } from '../../server/server.js';
+import { useNavigate } from 'react-router-dom';
 
 function SaveApi() {
     const [selectedModel, setSelectedModel] = useState('GPT-4o')
     const [command, setCommand] = useState('')
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [error, setError] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const [error, setError] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     
+    const navigate = useNavigate() // Missing navigate initialization
     const models = ['GPT-4o', 'Gemini']
   
     const handleExecuteCommand = async () => {
       console.log('Executing command:- ', command);
       
-      if (command === '') return
+      if (command.trim() === '') {
+        setError('API Key cannot be empty')
+        return
+      }
       
-      const response = await getData({ 
-        prompt: command, 
-        model: selectedModel })
-      console.log(response)
-      
-      setRecent([command, ...recent])
-      setCommand('')
+      try {
+        setIsLoading(true)
+        setError('') // Clear previous errors
+        
+        const response = await SaveApiKey({ 
+          api_key: command, 
+          model: selectedModel 
+        })
+        
+        console.log(response)
+        setCommand('')
+        navigate('/')
+      } catch (error) {
+        console.error(error)
+        setError('Error saving API Key')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        handleExecuteCommand()
+      }
     }
     
     return (
@@ -32,15 +54,14 @@ function SaveApi() {
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
               Enter your API Key
             </h1>
-            {/* error */}
             {error && (
-              <div className=" text-red-600 text-xl rounded-lg">
+              <div className="text-red-600 text-xl rounded-lg mt-4">
                 {error}
               </div>
             )}
           </div>
           
-          <div className="w-full bg-neutral-900 border border-neutral-800 rounded-xl p-3 shadow-lg">
+          <div className="w-full bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-lg">
             <div className="relative mb-5">
               <div 
                 className="flex items-center justify-between w-full p-3 border border-neutral-700 rounded-lg bg-neutral-800 cursor-pointer"
@@ -77,23 +98,24 @@ function SaveApi() {
                 <input 
                   type="text"
                   className="flex-grow bg-transparent py-4 focus:outline-none text-neutral-200 placeholder-neutral-500"
-                  placeholder="Enter your api key..."
+                  placeholder="Enter your API key..."
                   value={command}
                   onChange={(e) => setCommand(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
                 />
-                
               </div>
               
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 cursor-pointer text-white font-medium py-4 px-6 rounded-lg 
-              transition-all duration-200 flex items-center justify-center"
-              onClick={handleExecuteCommand}>
-                {/* <Send className="h-5 w-5 mr-2" /> */}
-                Save API Key
+              <button 
+                className={`bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium py-4 px-6 rounded-lg 
+                transition-all duration-200 flex items-center justify-center ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                onClick={handleExecuteCommand}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Saving...' : 'Save API Key'}
               </button>
             </div>
-            
           </div>
-          
         </div>
       </div>
     )
