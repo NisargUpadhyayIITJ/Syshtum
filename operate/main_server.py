@@ -49,7 +49,6 @@ def main_entry(request: PromptRequest) -> JSONResponse:
         print("\nExiting...")
         return JSONResponse(status_code=500, content={"status": "Error", "message": "Operation interrupted"})
 
-    return JSONResponse(status_code=500, content={"status": "Error"})   
 
 @app.post("/validate/")
 def validate(request: ValidateRequest) -> JSONResponse:
