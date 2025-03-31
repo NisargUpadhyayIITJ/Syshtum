@@ -9,7 +9,7 @@ The codebase is the the staging branch for now
 ### Web Application
 1. Navigate to the project folder:
     ```bash
-    cd Interface/UI
+    cd Interface
     
     ```
 2. Install dependencies:
@@ -26,7 +26,7 @@ The codebase is the the staging branch for now
 ### Tauri Desktop Application
 1. Navigate to the project folder:
     ```bash
-   cd Interface/UI
+   cd Interface
 
     ```
 2. Start the Tauri development environment:
@@ -38,7 +38,7 @@ The codebase is the the staging branch for now
 ### Build the Desktop App
 1. Navigate to the project folder:
     ```bash
-   cd Interface/UI
+   cd Interface
 
     ```
 2. Start the Tauri development environment:
