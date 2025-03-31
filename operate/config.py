@@ -88,6 +88,7 @@ class Config:
         client = OpenAI(
             api_key=api_key,
         )
+        
         client.api_key = api_key
         client.base_url = os.getenv("OPENAI_API_BASE_URL", client.base_url)
         logger.debug(f"OPENAI_BASE_URL is : {client.base_url}")
