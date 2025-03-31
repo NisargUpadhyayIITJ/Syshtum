@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
+    "@tauri-apps/cli": "^2.4.0",
     "axios": "^1.8.3",
     "lucide-react": "^0.482.0",
     "react": "^19.0.0",
