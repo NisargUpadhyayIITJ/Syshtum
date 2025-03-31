@@ -3,7 +3,7 @@ use std::process::{Command, Stdio};
 
 fn main() {
     let project_root = env::current_dir().unwrap();  // Get current directory
-    let backend_path = project_root.join("../operate/main.py");  // Construct absolute path
+    let backend_path = project_root.join("../operate/main_server.py");  // Construct absolute path
 
     let mut backend_process = Command::new("python3")
         .arg(backend_path)  // Use dynamically resolved path
