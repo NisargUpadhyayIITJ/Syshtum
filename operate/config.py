@@ -142,32 +142,60 @@ class Config:
         """
         Validate the input parameters for the dialog operation.
         """
-        self.require_api_key(
-            "OPENAI_API_KEY",
-            "OpenAI API key",
-            model == "gpt-4"
-            or voice_mode
-            or model == "gpt-4-with-som"
-            or model == "gpt-4-with-ocr"
-            or model == "o1-with-ocr",
-        )
-        self.require_api_key(
-            "GOOGLE_API_KEY", "Google API key", model == "gemini-pro-vision"
+        return (
+            self.require_api_key(
+                "OPENAI_API_KEY",
+                "OpenAI API key",
+                model == "gpt-4"
+                or voice_mode
+                or model == "gpt-4-with-som"
+                or model == "gpt-4-with-ocr"
+                or model == "custom-gpt"
+                or model == "fast-gpt",
+            )
+            or
+            self.require_api_key(
+                "GEMINI_API_KEY", 
+                "Google API key", 
+                model == "gemini-pro-vision"
+                or model == "fast-gemini"
+                or model == "custom-gemini"   
+            )
         )
 
     def require_api_key(self, key_name, key_description, is_required):
         key_exists = bool(os.environ.get(key_name))
-        if self.verbose:
-            print("[Config] require_api_key")
-            print("[Config] key_name", key_name)
-            print("[Config] key_description", key_description)
-            print("[Config] key_exists", key_exists)
-        if is_required and not key_exists:
-            self.prompt_and_save_api_key(key_name, key_description)
+        return (is_required and not key_exists)
+            # self.prompt_and_save_api_key(key_name, key_description)
+
+    def save_api_key(self, model, key_value):
+        if key_value is None:  # User pressed cancel or closed the dialog
+            sys.exit("Operation cancelled by user.")
+
+        if (model == "gpt-4"
+            or model == "gpt-4-with-som"
+            or model == "gpt-4-with-ocr"
+            or model == "custom-gpt"
+            or model == "fast-gpt"):
+            key_name = "OPENAI_API_KEY"
+        elif (model == "gemini-pro-vision"
+              or model == "fast-gemini"
+              or model == "custom-gemini"):
+            key_name = "GEMINI_API_KEY"
+
+        if key_value:
+            if key_name == "OPENAI_API_KEY":
+                self.openai_api_key = key_value
+            elif key_name == "GEMINI_API_KEY":
+                self.google_api_key = key_value
+            self.save_api_key_to_env(key_name, key_value)
+            load_dotenv()  # Reload environment variables
+            # Update the instance attribute with the new key
 
     def prompt_and_save_api_key(self, key_name, key_description):
         key_value = input_dialog(
-            title="API Key Required", text=f"Please enter your {key_description}:"
+            title=f"Enter {key_description}",
+            text=f"Please enter your {key_description} to continue:",
         ).run()
 
         if key_value is None:  # User pressed cancel or closed the dialog
@@ -176,7 +204,7 @@ class Config:
         if key_value:
             if key_name == "OPENAI_API_KEY":
                 self.openai_api_key = key_value
-            elif key_name == "GOOGLE_API_KEY":
+            elif key_name == "GEMINI_API_KEY":
                 self.google_api_key = key_value
             self.save_api_key_to_env(key_name, key_value)
             load_dotenv()  # Reload environment variables
