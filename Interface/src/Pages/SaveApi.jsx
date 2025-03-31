@@ -27,7 +27,7 @@ function SaveApi() {
         
         const response = await SaveApiKey({ 
           api_key: command, 
-          model: selectedModel == 'Gemini' ? 'fast-gemini' : 'fast-gpt',
+          model: selectedModel === 'GPT-4o' ? 'fast-gpt' : 'fast-gemini' 
         })
         
         console.log(response)

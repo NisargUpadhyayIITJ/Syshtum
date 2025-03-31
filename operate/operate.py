@@ -4,8 +4,11 @@ import time
 import asyncio
 from prompt_toolkit.shortcuts import message_dialog
 from prompt_toolkit import prompt
+from utils.prompt_enhancer import prompt_enhancement
+from utils.voice_feedback import text_to_speech
 from exceptions import ModelNotRecognizedException
 import platform
+import threading
 from loguru import logger
 
 # from operate.models.prompts import USER_QUESTION, get_system_prompt
@@ -31,7 +34,7 @@ config = Config()
 operating_system = OperatingSystem()
 
 
-async def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
+def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
     """
     Main function for the Self-Operating Computer.
 
@@ -97,6 +100,9 @@ async def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
         print(f"{ANSI_YELLOW}[User]{ANSI_RESET}")
         objective = prompt(style=style)
 
+    if(model == "fast-gpt"):
+        objective = prompt_enhancement(objective)
+
     system_prompt = get_system_prompt(model, objective)
     system_message = {"role": "system", "content": system_prompt}
     messages = [system_message]
@@ -117,6 +123,16 @@ async def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
             [operations, messages], session_id  = asyncio.run(
                 get_next_action(model, messages, objective, session_id)
             )
+
+            if(model == "fast-gpt"):
+                thoughts = ""
+                for operation in operations:
+                    operate_thought = operation.get("thought")
+                    thoughts += f"{operate_thought}\n"
+                #text_to_speech(thoughts)
+                tts_thread = threading.Thread(target=text_to_speech, args=(thoughts,))
+                tts_thread.daemon = True  # This ensures the thread closes when the main program exits
+                tts_thread.start()
 
             stop = operate(operations, model)
             if stop:

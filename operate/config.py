@@ -170,9 +170,6 @@ class Config:
             # self.prompt_and_save_api_key(key_name, key_description)
 
     def save_api_key(self, model, key_value):
-        logger.debug(f"Saving API key for model: {model}")
-        logger.debug(f"Key value: {key_value}")
-        key_name = None
         if key_value is None:  # User pressed cancel or closed the dialog
             sys.exit("Operation cancelled by user.")
 

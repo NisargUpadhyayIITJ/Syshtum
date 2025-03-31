@@ -20,7 +20,7 @@ function Home() {
         setIsLoading(true)
         const response = await getData({ 
           prompt: command, 
-          model: selectedModel == 'Gemini' ? 'fast-gemini' : 'fast-gpt', 
+          model: selectedModel === 'GPT-4o' ? 'fast-gpt' : 'fast-gemini' 
         })
         console.log(response)
         
@@ -38,7 +38,7 @@ function Home() {
     const validateApiKey = async () => {
         try {
             const response = await ValidateKey({
-                model: selectedModel == 'Gemini' ? 'fast-gemini' : 'fast-gpt',
+                model: selectedModel === 'GPT-4o' ? 'fast-gpt' : 'fast-gemini'
             })
             
             // If we get here, the key is valid
