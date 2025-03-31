@@ -171,6 +171,7 @@ cython_debug/
 .pypirc
 
 #Folder
+output.mp3
 screenshots
 ocr 
 labeled_images
