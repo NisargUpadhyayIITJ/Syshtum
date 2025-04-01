@@ -38,7 +38,7 @@ def main_entry(request: PromptRequest) -> JSONResponse:
     logger.debug(f"Received request with model: {request.model} and prompt: {request.prompt}")
     try:
         config = Config()
-        if(not config.validation(request.model, voice_mode=False)):
+        if(config.validation(request.model, voice_mode=False)):
             return JSONResponse(status_code=404, content={"status": "Error", "message": "Enter API Key"})
         main(
             model = request.model,
@@ -53,7 +53,7 @@ def main_entry(request: PromptRequest) -> JSONResponse:
 @app.post("/validate/")
 def validate(request: ValidateRequest) -> JSONResponse:
     config = Config()
-    if(not config.validation(request.model, voice_mode=False)):
+    if(config.validation(request.model, voice_mode=False)):
         return JSONResponse(status_code=404, content={"status": "Error", "message": "Enter API Key"})
     # Add this return statement for the successful case
     return JSONResponse(status_code=200, content={"status": "OK", "message": "API Key valid"})
@@ -71,4 +71,4 @@ def health_check():
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8002, reload=True)
+    uvicorn.run("main_server:app", host="127.0.0.1", port=8002, reload=True)
