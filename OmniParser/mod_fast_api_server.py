@@ -9,7 +9,7 @@ import base64
 import io
 import os
 import time
-from utils import get_som_labeled_img, check_ocr_box, get_caption_model_processor, get_yolo_model
+from util.utils import get_som_labeled_img, check_ocr_box, get_caption_model_processor, get_yolo_model
 
 # Create FastAPI app
 app = FastAPI()
@@ -17,7 +17,7 @@ app = FastAPI()
 # Global variables to store models
 som_model = None
 caption_model_processor = None
-device = 'cuda'
+device = 'cpu'
 
 class ImageRequest(BaseModel):
     image_base64: str
@@ -30,7 +30,7 @@ async def load_models():
     logger.info("Loading models...")
     
     # Load SOM model
-    model_path = 'weights/icon_detect_v1_5/model_v1_5.pt'
+    model_path = 'weights/icon_detect/model.pt'
     som_model = get_yolo_model(model_path)
     som_model.to(device)
     logger.success("SOM model loaded and moved to GPU")
