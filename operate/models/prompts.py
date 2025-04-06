@@ -48,7 +48,7 @@ Here are some helpful examples:
 Example 1: Searches for Google Chrome on the OS and opens it
 ```
 [
-    {{ "thought": "Searching the operating system to find Google Chrome because it appears I am currently in terminal", "operation": "press", "keys": {os_search_str} }},
+    {{ "thought": "Searching the operating system to find Google Chrome because it appears I am currently on the home page", "operation": "press", "keys": {os_search_str} }},
     {{ "thought": "Now I need to write 'Google Chrome' as a next step", "operation": "write", "content": "Google Chrome" }},
     {{ "thought": "Finally I'll press enter to open Google Chrome assuming it is available", "operation": "press", "keys": ["enter"] }}
 ]
@@ -112,7 +112,7 @@ You have 5 possible operation actions available to you. The `pyautogui` library 
 ```
 [{{ "thought": "write a thought here", "operation": "scroll"}}]
 ```
-5. done - The objective is completed
+5. done - The objective is completed - Once the action is completed, you can use this operation to indicate that the task is done.
 ```
 [{{ "thought": "write a thought here", "operation": "done", "summary": "summary of what was completed" }}]
 ```
@@ -123,7 +123,7 @@ Here a helpful example:
 Example 1: Searches for Google Chrome on the OS and opens it
 ```
 [
-    {{ "thought": "Searching the operating system to find Google Chrome because it appears I am currently in terminal", "operation": "press", "keys": {os_search_str} }},
+    {{ "thought": "Searching the operating system to find Google Chrome because it appears I am currently on the home page", "operation": "press", "keys": {os_search_str} }},
     {{ "thought": "Now I need to write 'Google Chrome' as a next step", "operation": "write", "content": "Google Chrome" }},
 ]
 ```
@@ -206,7 +206,7 @@ Here a helpful example:
 Example 1: Searches for Google Chrome on the OS and opens it
 ```
 [
-    {{ "thought": "Searching the operating system to find Google Chrome because it appears I am currently in terminal", "operation": "press", "keys": {os_search_str} }},
+    {{ "thought": "Searching the operating system to find Google Chrome because it appears I am currently on the home page", "operation": "press", "keys": {os_search_str} }},
     {{ "thought": "Now I need to write 'Google Chrome' as a next step", "operation": "write", "content": "Google Chrome" }},
     {{ "thought": "Finally I'll press enter to open Google Chrome assuming it is available", "operation": "press", "keys": ["enter"] }}
 ]
@@ -244,7 +244,7 @@ Objective: {objective}
 OPERATE_FIRST_MESSAGE_PROMPT = """
 Please take the next best action. The `pyautogui` library will be used to execute your decision. Your output will be used in a `json.loads` loads statement. Remember you only have the following 5 operations available: click, write, press, scroll, done
 
-You just started so you are in the terminal app and your code is running in this terminal tab. To leave the terminal, search for a new program on the OS. 
+You just started so you are in the desktop application. To leave the application, search for a new program on the OS. 
 
 Action:"""
 
