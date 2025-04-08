@@ -1,102 +1,67 @@
-# Syshtum
-**SYStem Heuristic Task Undertaking through Prompt Management**
+# Syshtum: SYStem Heuristic Task Undertaking through Prompt Management
 
-Syshtum is a project designed to streamline task management through heuristic systems and prompt-based workflows. This repository contains both a web application and a Tauri-based desktop application for managing tasks efficiently.
-
----
-
-## Branch Information
-The current codebase resides in the **staging branch**. Ensure you are on the correct branch before making changes or running the application.
+Syshtum is a system designed to act as an **Operating System (OS) Controlling Agent**, leveraging AI models and heuristic task management techniques. The project integrates **OmniParser**, a vision-based GUI parsing tool, to enable seamless interaction with graphical user interfaces (GUIs) and execute tasks autonomously. Syshtum is capable of interpreting user prompts, generating actionable plans, and performing operations such as mouse clicks, keyboard inputs, and file management, making it a versatile tool for automating complex workflows.
 
 ---
 
-## Prerequisites
-Before running the application, ensure you have the following installed:
-- **Node.js** (v16 or later)
-- **npm** (Node Package Manager)
-- **Tauri prerequisites** (Rust, Cargo, etc., for building the desktop app)
+## How to Use
 
----
+1. **Clone the Repository**:  
+   Ensure you have the project files on your local machine.
 
-## Running the Application
+2. **Navigate to the Project Directory**:  
+   Open a terminal and run:
+   ```bash
+   cd Syshtum
+   ```
 
-### Web Application
-The web application is built using modern JavaScript frameworks. Follow these steps to run it locally:
-
-1. **Navigate to the project folder:**
-    ```bash
-    cd Interface
+3. Create a Virtual Environment:
+    Set up a Python virtual environment to manage dependencies:
     ```
-
-2. **Install dependencies:**
-    ```bash
-    npm install
+    python3 -m venv venv
     ```
+    
+4. Activate the Virtual Environment:
 
-3. **Start the development server:**
-    ```bash
-    npm run dev
+    On macOS/Linux:
+    ```
+    source venv/bin/activate
+    ```
+    On Windows:
+    ```
+    venv\Scripts\activate
     ```
     This will start the web application on a local development server. Open your browser and navigate to the URL provided in the terminal (usually `http://localhost:3000`).
 
 ---
 
-### Tauri Desktop Application
-The desktop application is built using Tauri, which combines web technologies with Rust for a lightweight and secure desktop experience.
-
-1. **Navigate to the project folder:**
-    ```bash
-    cd Interface
+5. Install Dependencies:
+    Install the required Python packages:
     ```
-
-2. **Start the Tauri development environment:**
-    ```bash
-    npm run tauri dev
+    pip install -r requirements.txt
     ```
     This will launch the desktop application in development mode.
 
----
-
-### Building the Desktop Application
-To create a production-ready build of the desktop application:
-
-1. **Navigate to the project folder:**
-    ```bash
-    cd Interface
+6. Run the Application:
+    Start the PyQt-based GUI application:
+    ```
+    python3 main_ui.py
     ```
 
-2. **Build the Tauri application:**
-    ```bash
-    npm run tauri build
-    ```
-    The built application will be available in the `src-tauri/target/release` directory.
-
 ---
 
-## Project Structure
-- **Interface/**: Contains the source code for both the web and desktop applications.
-- **src-tauri/**: Contains Tauri-specific configuration and Rust code for the desktop application.
+## Key Features
+
+1. **OmniParser Integration**:  
+   Syshtum utilizes **OmniParser**, a screen parsing tool, to analyze GUI screenshots and extract structured data. This data is used to ground AI-generated actions in specific regions of the interface, enabling precise and context-aware task execution. OmniParser supports multiple models, which can be orchestrated for enhanced performance.
+
+2. **OS Control Capabilities**:  
+   The system can perform a variety of OS-level operations, such as:
+   - Simulating keyboard inputs and mouse clicks.
+   - Navigating GUIs based on parsed screen data.
+   - Automating repetitive tasks with minimal user intervention.
+
+3. **Modular Design**:  
+   The project is organized into modular components, making it easy to extend and customize. Key modules include `operate`, which handles OS-level operations, and `OmniParser`, which focuses on GUI parsing.
 
 ---
-
-## Contributing
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-repo/syshtum.git
-    ```
-2. Switch to the staging branch:
-    ```bash
-    git checkout staging
-    ```
-3. Make your changes and submit a pull request.
-
----
-
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
-
-## Support
-For any issues or questions, please open an issue in the repository or contact the maintainers.
-
