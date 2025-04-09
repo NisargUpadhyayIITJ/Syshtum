@@ -23,8 +23,9 @@ class MainApp(QMainWindow):
         self.setStyleSheet("background-color: #000000;")
         self.resize(800, 600)
 
-        # Start FastAPI server
-        self.start_fastapi_server()
+        # # Start FastAPI server
+        # self.start_fastapi_server()
+        # time.sleep(5)
 
         # Stacked widget for navigation
         self.stack = QStackedWidget()
@@ -63,6 +64,5 @@ class MainApp(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainApp()
-    time.sleep(15)
     window.show()
     sys.exit(app.exec())

@@ -17,23 +17,23 @@ import requests
 import pandas as pd
 
 
-from config import Config
-from exceptions import ModelNotRecognizedException
-from models.prompts import (
+from operate.config import Config
+from operate.exceptions import ModelNotRecognizedException
+from operate.models.prompts import (
     get_system_prompt,
     get_user_first_message_prompt,
     get_user_prompt,
     get_som_prompt
 )
-from utils.label import (
+from operate.utils.label import (
     add_labels,
     add_custom_labels,
     get_click_position_in_percent,
     get_label_coordinates,
 )
-from utils.ocr import get_text_coordinates, get_text_element
-from utils.screenshot import capture_screen_with_cursor
-from utils.style import ANSI_BRIGHT_MAGENTA, ANSI_GREEN, ANSI_RED, ANSI_RESET
+from operate.utils.ocr import get_text_coordinates, get_text_element
+from operate.utils.screenshot import capture_screen_with_cursor
+from operate.utils.style import ANSI_BRIGHT_MAGENTA, ANSI_GREEN, ANSI_RED, ANSI_RESET
 
 # Load configuration
 config = Config()

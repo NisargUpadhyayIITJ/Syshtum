@@ -2,6 +2,25 @@ import requests
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QListWidget, QHBoxLayout, QFrame
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
+from operate.config import Config
+from operate.operate import main
+
+class RequestException(IOError):
+    """There was an ambiguous exception that occurred while handling your
+    request.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """Initialize RequestException with `request` and `response` objects."""
+        response = kwargs.pop("response", None)
+        self.response = response
+        self.request = kwargs.pop("request", None)
+        if response is not None and not self.request and hasattr(response, "request"):
+            self.request = self.response.request
+        super().__init__(*args, **kwargs)
+
+class HTTPError(RequestException):
+    """An HTTP error occurred."""
 
 class HomeScreen(QWidget):
     def __init__(self, parent):
@@ -154,8 +173,11 @@ class HomeScreen(QWidget):
     def validate_api_key(self):
         model = "fast-gpt" if self.model_combo.currentText() == "GPT-4o" else "fast-gemini"
         try:
-            response = requests.post("http://127.0.0.1:8002/validate/", json={"model": model})
-            if response.status_code == 404:
+            
+            # response = requests.post("http://127.0.0.1:8002/validate/", json={"model": model})
+            # if response.status_code == 404:
+            config = Config()
+            if(config.validation(model, voice_mode=False)):
                 self.error_label.setVisible(True)
                 self.execute_btn.setEnabled(False)
                 self.command_input.setEnabled(False)
@@ -176,8 +198,15 @@ class HomeScreen(QWidget):
         try:
             self.execute_btn.setText("Processing...")
             self.execute_btn.setEnabled(False)
-            response = requests.post("http://127.0.0.1:8002/pipeline/", json={"model": model, "prompt": command})
-            response.raise_for_status()
+            # response = requests.post("http://127.0.0.1:8002/pipeline/", json={"model": model, "prompt": command})
+            # response.raise_for_status()
+            config = Config()
+            if(config.validation(model, voice_mode=False)):
+                raise HTTPError("Error occured in validating API Key.", response=self)
+            main(
+                model = model,
+                terminal_prompt = command,
+            )
             
             self.recent_list.insertItem(0, command)
             self.command_input.clear()

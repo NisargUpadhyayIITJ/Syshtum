@@ -4,7 +4,7 @@ import time
 import math
 from loguru import logger
 
-from utils.misc import convert_percent_to_decimal
+from operate.utils.misc import convert_percent_to_decimal
 
 
 class OperatingSystem:

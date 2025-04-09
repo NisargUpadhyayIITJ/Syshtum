@@ -1,6 +1,24 @@
 import requests
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QFrame
 from PyQt6.QtCore import Qt
+from operate.config import Config
+
+class RequestException(IOError):
+    """There was an ambiguous exception that occurred while handling your
+    request.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """Initialize RequestException with `request` and `response` objects."""
+        response = kwargs.pop("response", None)
+        self.response = response
+        self.request = kwargs.pop("request", None)
+        if response is not None and not self.request and hasattr(response, "request"):
+            self.request = self.response.request
+        super().__init__(*args, **kwargs)
+
+class HTTPError(RequestException):
+    """An HTTP error occurred."""
 
 class SaveApiScreen(QWidget):
     def __init__(self, parent):
@@ -86,8 +104,11 @@ class SaveApiScreen(QWidget):
         try:
             self.save_btn.setText("Saving...")
             self.save_btn.setEnabled(False)
-            response = requests.post("http://127.0.0.1:8002/enter_api", json={"model": model, "api_key": api_key})
-            response.raise_for_status()
+            # response = requests.post("http://127.0.0.1:8002/enter_api", json={"model": model, "api_key": api_key})
+            # response.raise_for_status()
+            config = Config()
+            config.save_api_key(model, api_key)
+            
             self.api_input.clear()
             self.error_label.setVisible(False)
             self.parent.navigate_to("home")

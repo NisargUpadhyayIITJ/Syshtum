@@ -1,5 +1,5 @@
 import platform
-from config import Config
+from operate.config import Config
 from loguru import logger
 
 # Load configuration
