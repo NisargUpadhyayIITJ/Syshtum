@@ -96,6 +96,9 @@ class HomeScreen(QWidget):
         """)
         main_layout.addWidget(self.command_input)
 
+        # Buttons Container - Execute and Voice Input
+        buttons_container = QHBoxLayout()
+        
         # Execute Button
         self.execute_btn = QPushButton("Execute Command")
         self.execute_btn.setIcon(QIcon("path/to/arrow_icon.png"))  # Add a placeholder for the arrow icon
@@ -107,7 +110,23 @@ class HomeScreen(QWidget):
             font-size: 14px;
             font-weight: bold;
         """)
-        main_layout.addWidget(self.execute_btn)
+        buttons_container.addWidget(self.execute_btn)
+        
+        # Voice Input Button
+        self.voice_btn = QPushButton("Voice Input")
+        self.voice_btn.setIcon(QIcon("path/to/mic_icon.png"))  # Add a placeholder for the mic icon
+        self.voice_btn.setStyleSheet("""
+            background-color: #1F2937;
+            color: white; 
+            padding: 12px; 
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        """)
+        self.voice_btn.clicked.connect(self.activate_voice_input)
+        buttons_container.addWidget(self.voice_btn)
+        
+        main_layout.addLayout(buttons_container)
 
         # Recent Commands Section with Refresh Button
         recent_container = QHBoxLayout()
@@ -181,10 +200,12 @@ class HomeScreen(QWidget):
                 self.error_label.setVisible(True)
                 self.execute_btn.setEnabled(False)
                 self.command_input.setEnabled(False)
+                self.voice_btn.setEnabled(False)
             else:
                 self.error_label.setVisible(False)
                 self.execute_btn.setEnabled(True)
                 self.command_input.setEnabled(True)
+                self.voice_btn.setEnabled(True)
         except requests.RequestException as e:
             self.error_label.setText(f"Error: {str(e)}")
             self.error_label.setVisible(True)
@@ -205,7 +226,7 @@ class HomeScreen(QWidget):
                 raise HTTPError("Error occured in validating API Key.", response=self)
             main(
                 model = model,
-                terminal_prompt = command,
+                terminal_prompt = command
             )
             
             self.recent_list.insertItem(0, command)
@@ -220,6 +241,37 @@ class HomeScreen(QWidget):
         finally:
             self.execute_btn.setText("Execute Command")
             self.execute_btn.setEnabled(True)
+
+    def activate_voice_input(self):
+        # Placeholder for voice input functionality
+        self.voice_btn.setText("Listening...")
+        self.voice_btn.setEnabled(False)
+
+        model = "fast-gpt" if self.model_combo.currentText() == "GPT-4o" else "fast-gemini"
+
+        self.execute_btn.setText("Processing...")
+        self.execute_btn.setEnabled(False)
+        # response = requests.post("http://127.0.0.1:8002/pipeline/", json={"model": model, "prompt": command})
+        # response.raise_for_status()
+        config = Config()
+        if(config.validation(model, voice_mode=False)):
+            raise HTTPError("Error occured in validating API Key.", response=self)
+        main(
+            model = model,
+            terminal_prompt="Voice Input",
+            voice_mode=True
+        )
+        
+        # Here you would implement actual voice recognition
+        # For now, just simulate processing
+        
+    def finish_voice_input(self):
+        # Reset button state
+        self.voice_btn.setText("Voice Input")
+        self.voice_btn.setEnabled(True)
+        
+        # In a real implementation, you would set the recognized text to the command input
+        # self.command_input.setText(recognized_text)
 
     def reuse_command(self, item):
         self.command_input.setText(item.text())

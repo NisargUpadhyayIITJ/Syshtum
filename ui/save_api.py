@@ -85,6 +85,19 @@ class SaveApiScreen(QWidget):
             font-weight: bold;
         """)
         main_layout.addWidget(self.save_btn)
+        
+        # Back Button
+        self.back_btn = QPushButton("Back")
+        self.back_btn.setStyleSheet("""
+            background-color: #374151; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 5px;
+            font-size: 14px;
+            margin-top: 10px;
+        """)
+        self.back_btn.clicked.connect(lambda: self.parent.navigate_to("home"))
+        main_layout.addWidget(self.back_btn)
 
         layout.addWidget(main_frame)
         self.setLayout(layout)
