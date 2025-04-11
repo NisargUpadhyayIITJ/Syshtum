@@ -169,3 +169,18 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+#Folder
+output.mp3
+screenshots
+ocr 
+labeled_images
+.DS_Store
+
+# Omniparser
+Omniparser/weights/icon_caption_blip2
+Omniparser/weights/icon_caption_florence
+Omniparser/weights/icon_detect/
+Omniparser/weights/icon_detect_v1_5/
+Omniparser/weights/icon_detect_v1_5_2/
+debug.ipynb
