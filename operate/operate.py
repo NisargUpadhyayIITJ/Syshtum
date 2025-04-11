@@ -4,9 +4,10 @@ import time
 import asyncio
 from prompt_toolkit.shortcuts import message_dialog
 from prompt_toolkit import prompt
-from operate.utils.prompt_enhancer import prompt_enhancement
+from operate.utils.prompt_enhancer import prompt_enhancement_gpt, prompt_enhancement_gemini
 from operate.utils.voice_feedback import text_to_speech
 from operate.exceptions import ModelNotRecognizedException
+from RealtimeTTS import TextToAudioStream, SystemEngine, GTTSEngine
 import platform
 import threading
 from loguru import logger
@@ -34,7 +35,7 @@ config = Config()
 operating_system = OperatingSystem()
 
 
-def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
+def main(model, terminal_prompt=None, voice_mode=False, verbose_mode=False):
     """
     Main function for the Self-Operating Computer.
 
@@ -66,15 +67,15 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
             sys.exit(1)
 
     # Skip message dialog if prompt was given directly
-    if not terminal_prompt:
-        message_dialog(
-            title="Self-Operating Computer",
-            text="An experimental framework to enable multimodal models to operate computers",
-            style=style,
-        ).run()
+    # if not terminal_prompt:
+    #     message_dialog(
+    #         title="Self-Operating Computer",
+    #         text="An experimental framework to enable multimodal models to operate computers",
+    #         style=style,
+    #     ).run()
 
-    else:
-        print("Running direct prompt...")
+    # else:
+    print("Running direct prompt...")
 
     # # Clear the console
     if platform.system() == "Windows":
@@ -101,7 +102,12 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
         objective = prompt(style=style)
 
     if(model == "fast-gpt"):
-        objective = prompt_enhancement(objective)
+        objective = prompt_enhancement_gpt(objective)
+    elif(model == "fast-gemini"):
+        objective = prompt_enhancement_gemini(objective)
+
+    engine = GTTSEngine()  # Replace with AzureEngine, ElevenlabsEngine, etc., as needed
+    stream = TextToAudioStream(engine)
 
     system_prompt = get_system_prompt(model, objective)
     system_message = {"role": "system", "content": system_prompt}
@@ -124,15 +130,20 @@ def main(model, terminal_prompt, voice_mode=False, verbose_mode=False):
                 get_next_action(model, messages, objective, session_id)
             )
 
-            if(model == "fast-gpt"):
+            if(model == "fast-gpt" or model == "fast-gemini"):
                 thoughts = ""
                 for operation in operations:
                     operate_thought = operation.get("thought")
                     thoughts += f"{operate_thought}\n"
-                #text_to_speech(thoughts)
-                tts_thread = threading.Thread(target=text_to_speech, args=(thoughts,))
-                tts_thread.daemon = True  # This ensures the thread closes when the main program exits
-                tts_thread.start()
+                # tts_thread = threading.Thread(target=text_to_speech, args=(thoughts,))
+                # tts_thread.daemon = True  # This ensures the thread closes when the main program exits
+                # tts_thread.start()
+                # Feed thoughts to the stream
+                stream.feed(thoughts)
+                
+                # Play asynchronously
+                stream.play_async()
+
 
             stop = operate(operations, model)
             if stop:

@@ -258,7 +258,6 @@ class HomeScreen(QWidget):
             raise HTTPError("Error occured in validating API Key.", response=self)
         main(
             model = model,
-            terminal_prompt="Voice Input",
             voice_mode=True
         )
         

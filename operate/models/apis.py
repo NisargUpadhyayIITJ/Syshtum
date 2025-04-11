@@ -1109,7 +1109,7 @@ async def call_fast_gpt(messages, objective, model):
 
     begin = time.time()
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=messages,
         presence_penalty=1,
         frequency_penalty=1,
