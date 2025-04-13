@@ -7,7 +7,7 @@ from prompt_toolkit import prompt
 from operate.utils.prompt_enhancer import prompt_enhancement_gpt, prompt_enhancement_gemini
 from operate.utils.voice_feedback import text_to_speech
 from operate.exceptions import ModelNotRecognizedException
-from RealtimeTTS import TextToAudioStream, SystemEngine, GTTSEngine
+from RealtimeTTS import TextToAudioStream, GTTSEngine
 import platform
 import threading
 from loguru import logger
