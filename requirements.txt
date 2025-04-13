@@ -82,6 +82,9 @@ pyobjc-framework-coretext==11.0
 pyobjc-framework-quartz==11.0
 pyparsing==3.2.1
 pyperclip==1.9.0
+pyqt6==6.9.0
+pyqt6-qt6==6.9.0
+pyqt6-sip==13.10.0
 pyrect==0.2.0
 pyscreeze==1.0.1
 python-bidi==0.6.6
@@ -127,3 +130,11 @@ uvicorn==0.34.0
 wcwidth==0.2.13
 whisper-mic==1.4.4
 zipp==3.21.0
+emoji==2.14.1
+gtts==2.5.4
+joblib==1.4.2
+nltk==3.9.1
+realtimetts==0.5.2
+resampy==0.4.3
+stanza==1.10.1
+stream2sentence==0.3.1
