@@ -1,5 +1,5 @@
 from openai import OpenAI
-from google import genai
+import google.generativeai as genai  
 import os
 from loguru import logger
 
@@ -7,12 +7,20 @@ def prompt_enhancement_gpt(prompt: str) -> str:
     client = OpenAI()
 
     completion = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "user",
-                "content": f'''Analyse the given objective and elaborate it in order to make it clear to the LLMs on what actions need to be performed. Remember the output will be given to an OS LLM. Do not give any irrelevant information.
-                \n\nObjective: {prompt}'''
+                "content": f'''
+                Analyze the following user objective and break it down into explicit, step-by-step actions for an OS-controlled LLM. 
+
+                **Rules:**
+                1. **Be specific**: Replace vague terms (e.g., "open") with exact actions
+                2. **Prioritize keyboard shortcuts** over mouse clicks when possible.  
+                3. **Assume default apps**: Use Chrome for browsing, Terminal for commands, unless specified.  
+
+                **Objective:**  
+                "{prompt}" '''
             }
         ]
     )
@@ -20,13 +28,20 @@ def prompt_enhancement_gpt(prompt: str) -> str:
     return completion.choices[0].message.content
 
 def prompt_enhancement_gemini(prompt: str) -> str:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY_1"))  
+    model = genai.GenerativeModel("gemini-2.0-flash",)
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
+    response = model.generate_content(
         contents=[
-            f'''Analyse the given objective and elaborate it in order to make it clear to the LLMs on what actions need to be performed. Remember the output will be given to an OS LLM. Do not give any irrelevant information.
-            \n\nObjective: {prompt}'''
+            f'''Analyze the following user objective and break it down into explicit, step-by-step actions for an OS-controlled LLM. 
+
+            **Rules:**
+            1. **Be specific**: Replace vague terms (e.g., "open") with exact actions
+            2. **Prioritize keyboard shortcuts** over mouse clicks when possible.  
+            3. **Assume default apps**: Use Chrome for browsing, Terminal for commands, unless specified.  
+
+            **Objective:**  
+            "{prompt}" '''
         ]
     )
     logger.success(f"Enhanced prompt: {response.text}")
