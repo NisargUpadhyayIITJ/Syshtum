@@ -3,6 +3,9 @@
 Syshtum is a system designed to act as an **Operating System (OS) Controlling Agent**, leveraging AI models and heuristic task management techniques. The project integrates **OmniParser**, a vision-based GUI parsing tool, to enable seamless interaction with graphical user interfaces (GUIs) and execute tasks autonomously. Syshtum is capable of interpreting user prompts, generating actionable plans, and performing operations such as mouse clicks, keyboard inputs, and file management, making it a versatile tool for automating complex workflows.
 
 ---
+## Demo Video
+[Click here to watch the demo video](Demo/demo1.mp4)
+---
 
 ## How to Use
 
