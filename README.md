@@ -3,8 +3,7 @@
 AgentOpera is a system designed to act as an **Operating System (OS) Controlling Agent**, leveraging AI models and heuristic task management techniques. The project integrates **OmniParser**, a vision-based GUI parsing tool, to enable seamless interaction with graphical user interfaces (GUIs) and execute tasks autonomously. AgentOpera is capable of interpreting user prompts, generating actionable plans, and performing operations such as mouse clicks, keyboard inputs, and file management, making it a versatile tool for automating complex workflows.
 
 ---
-## Demo Video
-[Demo Video 1](https://drive.google.com/file/d/18Vp2AbUJ8SEWwTLMhGChOaYpwDbuHvwk/view?usp=sharing)
+[Demo Video](https://drive.google.com/file/d/18Vp2AbUJ8SEWwTLMhGChOaYpwDbuHvwk/view?usp=sharing)
 ---
 
 ## How to Use
