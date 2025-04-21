@@ -1,6 +1,6 @@
-# Syshtum: SYStem Heuristic Task Undertaking through Prompt Management
+# AgentOpera
 
-Syshtum is a system designed to act as an **Operating System (OS) Controlling Agent**, leveraging AI models and heuristic task management techniques. The project integrates **OmniParser**, a vision-based GUI parsing tool, to enable seamless interaction with graphical user interfaces (GUIs) and execute tasks autonomously. Syshtum is capable of interpreting user prompts, generating actionable plans, and performing operations such as mouse clicks, keyboard inputs, and file management, making it a versatile tool for automating complex workflows.
+AgentOpera is a system designed to act as an **Operating System (OS) Controlling Agent**, leveraging AI models and heuristic task management techniques. The project integrates **OmniParser**, a vision-based GUI parsing tool, to enable seamless interaction with graphical user interfaces (GUIs) and execute tasks autonomously. AgentOpera is capable of interpreting user prompts, generating actionable plans, and performing operations such as mouse clicks, keyboard inputs, and file management, making it a versatile tool for automating complex workflows.
 
 ---
 ## Demo Video
@@ -15,7 +15,7 @@ Syshtum is a system designed to act as an **Operating System (OS) Controlling Ag
 2. **Navigate to the Project Directory**:  
    Open a terminal and run:
    ```bash
-   cd Syshtum
+   cd AgentOpera
    ```
 
 3. Create a Virtual Environment:
